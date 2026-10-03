@@ -28,7 +28,6 @@ fn main() {
     let module_name = ini::find_setting(section, "module").unwrap_or_else(|| util::wait_exit("d3dx.ini [Loader] missing required \"module\" setting")).to_string();
     let module_path = if mipath.is_empty() { module_name } else { format!("{}\\{}", mipath, module_name) };
 
-    let check_ver = ini::find_bool(section, "check_version", true);
     let require_admin = ini::find_bool(section, "require_admin", false);
     let entry_point = ini::find_setting(section, "entry_point").unwrap_or("CBTProc").to_string();
     let hook_proc_id = ini::find_int(section, "hook_proc", WH_CBT.0);
@@ -38,7 +37,6 @@ fn main() {
     let loader_mode = std::env::var("LOADER_MODE").unwrap_or_default();
     let use_inject = loader_mode.eq_ignore_ascii_case("inject");
 
-    if check_ver { util::check_3dmigoto_version(&module_path); }
     if require_admin { process::elevate_if_needed(&mipath); }
 
     let module_cstr = std::ffi::CString::new(module_path.as_str()).unwrap();

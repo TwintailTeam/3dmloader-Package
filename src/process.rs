@@ -26,7 +26,7 @@ pub fn elevate_if_needed(mipath: &str) {
     let mut elevation = TOKEN_ELEVATION::default();
     let mut ret_len: u32 = 0;
     let ok = unsafe { GetTokenInformation(token, TokenElevation, Some(std::ptr::addr_of_mut!(elevation).cast()), size_of::<TOKEN_ELEVATION>() as u32, &mut ret_len) };
-    unsafe { let _ = windows::Win32::Foundation::CloseHandle(token); };
+    unsafe { let _ = CloseHandle(token); };
     if ok.is_err() { return; }
     if elevation.TokenIsElevated != 0 { return; }
 

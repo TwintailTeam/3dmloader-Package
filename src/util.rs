@@ -1,12 +1,11 @@
 use windows::Win32::UI::WindowsAndMessaging::{MessageBoxW, MB_OK, MB_ICONERROR};
-use windows::core::{PCSTR, PCWSTR};
-use windows::Win32::Storage::FileSystem::{GetFileVersionInfoA, GetFileVersionInfoSizeA, VerQueryValueA, VS_FIXEDFILEINFO};
+use windows::core::{PCWSTR};
 
-#[repr(C)]
+/*#[repr(C)]
 struct LangCodePage {
     language: u16,
     code_page: u16,
-}
+}*/
 
 pub fn wait_exit(msg: &str) -> ! {
     if !msg.is_empty() {
@@ -21,7 +20,7 @@ pub fn to_wide(s: &str) -> Vec<u16> {
     s.encode_utf16().chain(std::iter::once(0)).collect()
 }
 
-fn has_3dmigoto_description(data: &[u8], module_path: &str) -> bool {
+/*fn has_3dmigoto_description(data: &[u8], module_path: &str) -> bool {
     let query = std::ffi::CString::new("\\VarFileInfo\\Translation").unwrap();
     let mut ptr: *mut LangCodePage = std::ptr::null_mut();
     let mut size: u32 = 0;
@@ -42,7 +41,7 @@ fn has_3dmigoto_description(data: &[u8], module_path: &str) -> bool {
         let bytes = unsafe { std::slice::from_raw_parts(desc_ptr, desc_size as usize) };
         let desc = std::str::from_utf8(bytes).unwrap_or("").trim_end_matches('\0');
         println!("{} description: \"{}\"", module_path, desc);
-        if desc.to_ascii_lowercase().contains("3dmigoto") { return true; }
+        if desc.to_ascii_lowercase().contains("3dmigoto") || desc.to_ascii_lowercase().contains("xxmi") { return true; }
     }
     false
 }
@@ -68,4 +67,4 @@ pub fn check_3dmigoto_version(module_path: &str) {
 
     let too_old = fi.dwProductVersionMS < 0x0001_0003 || (fi.dwProductVersionMS == 0x0001_0003 && fi.dwProductVersionLS < 0x000f_0000);
     if too_old { wait_exit("This version of 3DMigoto is too old to be safely loaded - please use 1.3.15 or later", ); }
-}
+}*/
