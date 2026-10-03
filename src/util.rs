@@ -42,7 +42,7 @@ fn has_3dmigoto_description(data: &[u8], module_path: &str) -> bool {
         let bytes = unsafe { std::slice::from_raw_parts(desc_ptr, desc_size as usize) };
         let desc = std::str::from_utf8(bytes).unwrap_or("").trim_end_matches('\0');
         println!("{} description: \"{}\"", module_path, desc);
-        if desc.starts_with("3Dmigoto") { return true; }
+        if desc.to_ascii_lowercase().contains("3dmigoto") { return true; }
     }
     false
 }
@@ -56,7 +56,7 @@ pub fn check_3dmigoto_version(module_path: &str) {
 
     let mut data = vec![0u8; size as usize];
     if unsafe { GetFileVersionInfoA(pcstr, 0, size, data.as_mut_ptr().cast()) }.is_err() { wait_exit("3DMigoto version info check failed"); }
-    if !has_3dmigoto_description(&data, module_path) { wait_exit(&format!("ERROR: \"{}\" is not 3DMigoto. Ensure LOADER_MODULE is set correctly.", module_path)); }
+    if !has_3dmigoto_description(&data, module_path) { wait_exit(&format!("ERROR: \"{}\" is not 3DMigoto. Ensure [Loader] module in d3dx.ini is set correctly.", module_path)); }
 
     let mut info: *mut VS_FIXEDFILEINFO = std::ptr::null_mut();
     let mut info_size: u32 = 0;
